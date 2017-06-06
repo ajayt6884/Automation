@@ -1,0 +1,12 @@
+<%= variant1 = Spree::Variant.new %>
+
+Variant1:
+  id: 1
+  deleted_at: 0
+  is_master: 1
+  product_id: 1
+  position: 1
+  track_inventory: 1
+  updated_at: 2016-03-08 11:34:34
+  stock_items_count: 0
+

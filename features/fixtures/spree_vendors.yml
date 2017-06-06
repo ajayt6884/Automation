@@ -1,0 +1,17 @@
+<%= vendor1 = Spree::Vendor.create %>
+
+Vendor1:
+  id: 1
+  name: KFC
+  permalink: KFC
+  email: ajay.thakur+10@vinsol.com
+  phone_number: 1234567890
+  sold_products_count: 0
+  logo_file_name: images.jpeg
+  logo_content_type: image/jpeg
+  logo_file_size: 5316
+  logo_updated_at: 2016-03-08 11:34:34
+  created_at: 2016-03-08 11:34:34
+  updated_at: 2016-03-08 11:34:34
+  active: 1
+

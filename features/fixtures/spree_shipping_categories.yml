@@ -1,0 +1,8 @@
+<%= shippingcategory = Spree::ShippingCategory.create %>
+
+ShippingCategory:
+  id: 1
+  name: Default
+  created_at: 2016-03-08 11:34:34
+  updated_at: 2016-03-08 11:34:34
+  

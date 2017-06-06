@@ -1,0 +1,7 @@
+
+To run all the features
+cucumber features/general_inquiry.feature features/restaurant_feedback.feature features/philanthropy.feature
+
+
+
+85265853137

@@ -1,0 +1,7 @@
+<%= price1 = Spree::Price.new %>
+
+Price1:
+  id: 1
+  variant_id: 1
+  amount: 120.00
+  currency: ZAR
