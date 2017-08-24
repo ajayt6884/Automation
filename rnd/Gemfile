@@ -1,0 +1,13 @@
+# A sample Gemfile
+source "https://rubygems.org"
+
+# gem "rails"
+gem 'rubygems',  '=1.8.24'
+gem 'require_all' , '=1.2.1'
+gem "rspec" , '=2.14.1'
+#include RSpec::Expectations
+gem 'page-object', '=0.9.1'
+gem 'selenium-webdriver' , '=2.34.0'
+#gem 'page-object/page_factory'
+#require 'rubysl-base64'
+#require_all 'E:/rnd/cukes/lib/pages'

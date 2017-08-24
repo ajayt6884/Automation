@@ -1,0 +1,9 @@
+start_test_server_in_background
+query("*")
+a = query("*")
+a = query("label")
+query("label")
+query("button")
+query("button index:0")
+query("* button index:0")
+exit

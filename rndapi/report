@@ -1,0 +1,732 @@
+Feature: As an admin able to view ADDRESSES
+
+  @update @show
+  Scenario: As an admin I am able to edit address of users                 # cukes\feature\address.feature:4
+    When I send UPDATE request to an address for following fields with:    # cukes/feature/step_definitions/address_steps.rb:7
+      | id  | firstname | lastname | address1       | address2        | city      | zipcode |
+      | 195 | Vijay     | sah      | 123 New street | River Side Road | Town city | 10010   |
+    Then the response should be 200                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send UPDATE request to an address for following fields with:    # cukes/feature/step_definitions/address_steps.rb:7
+      | id  | firstname | lastname | address1       | address2        | city      | zipcode |
+      | 195 | Vij       | Sah      | 123 New Street | River Side Road | Town city | 10020   |
+    Then the response should be 200                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send GET request to view address details of an address id "195" # cukes/feature/step_definitions/address_steps.rb:2
+    Then the response should be 200                                        # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain hash of address with:                  # cukes/feature/step_definitions/address_steps.rb:12
+      | id  | firstname | lastname | address1       | address2        | city      | zipcode |
+      | 195 | Vij       | Sah      | 123 New Street | River Side Road | Town city | 10020   |
+
+  Scenario: As an admin I am able to edit address of users and save the blank fields # cukes\feature\address.feature:20
+    When I send UPDATE request to an address for following fields with:              # cukes/feature/step_definitions/address_steps.rb:7
+      | id  | firstname | lastname | address1       | address2        | city      | zipcode |
+      | 195 | Vijay     | sah      | 123 New street | River Side Road | Town city | 10010   |
+    Then the response should be 200                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    When I send UPDATE request to an address for following fields with:              # cukes/feature/step_definitions/address_steps.rb:7
+      | id  | firstname | lastname | address1       | address2        | city      | zipcode |
+      | 195 |           | Sah      | 123 New street | River Side Road | Town city | 10010   |
+    Then the response should be 422                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    When I send GET request to view address details of an address id "195"           # cukes/feature/step_definitions/address_steps.rb:2
+    Then the response should be 200                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain hash of address with:                            # cukes/feature/step_definitions/address_steps.rb:12
+      | id  | firstname | lastname | address1       | address2        | city      | zipcode |
+      | 195 | Vijay     | sah      | 123 New street | River Side Road | Town city | 10010   |
+
+  Scenario: As a non admin user, I am not able to view address                            # cukes\feature\address.feature:36
+    When non admin user send GET request to view address details of an address id "195"   # cukes/feature/step_definitions/address_steps.rb:18
+    Then the response should be 401                                                       # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain text "You are not authorized to perform that action." # cukes/feature/step_definitions/address_steps.rb:23
+
+  Scenario: As a Non admin User, I am able to view my address                           # cukes\feature\address.feature:42
+    When non admin user send GET request to view address details of an address id "196" # cukes/feature/step_definitions/address_steps.rb:18
+    Then the response should be 200                                                     # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain hash of address with:                               # cukes/feature/step_definitions/address_steps.rb:12
+      | id  | firstname | lastname   |
+      | 196 | Vij       | Mailinator |
+
+  @run
+  Scenario: As a Non Admin User, I am not able to view other' address                     # cukes\feature\address.feature:50
+    When non admin user send GET request to view address details of an address id "195"   # cukes/feature/step_definitions/address_steps.rb:18
+    Then the response should be 401                                                       # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain text "You are not authorized to perform that action." # cukes/feature/step_definitions/address_steps.rb:23
+
+Feature: As an admin able to list COUNTRIES
+
+  @index
+  Scenario: As an admin able to view list of all countries # cukes\feature\country.feature:4
+    When I send GET request to view country list           # cukes/feature/step_definitions/country_steps.rb:1
+    Then the response should be 200                        # cukes/feature/step_definitions/common_steps.rb:6
+    And the response contain hash of 227 country           # cukes/feature/step_definitions/country_steps.rb:6
+
+  @search
+  Scenario: As an admin able to search countries                              # cukes\feature\country.feature:10
+    When I send GET request to search country by "name" "Nigeria"             # cukes/feature/step_definitions/country_steps.rb:11
+    Then the response should be 200                                           # cukes/feature/step_definitions/common_steps.rb:6
+    And the response contain hash of countries having "Nigeria" in their name # cukes/feature/step_definitions/country_steps.rb:16
+
+  @show
+  Scenario: As an admin user able to view details of a country # cukes\feature\country.feature:16
+    When I send GET request to view country having id "33"     # cukes/feature/step_definitions/country_steps.rb:24
+    Then the response should be 200                            # cukes/feature/step_definitions/common_steps.rb:6
+    And the response contain hash of country id "33"           # cukes/feature/step_definitions/country_steps.rb:29
+
+  @index @non-admin @run
+  Scenario: As non admin user able to view list of all countries # cukes\feature\country.feature:23
+    When non admin user send GET request to view country list    # cukes/feature/step_definitions/country_steps.rb:34
+    Then the response should be 200                              # cukes/feature/step_definitions/common_steps.rb:6
+    And the response contain hash of 227 country                 # cukes/feature/step_definitions/country_steps.rb:6
+
+  @search @non-admin @run
+  Scenario: As non admin user able to search countries                         # cukes\feature\country.feature:29
+    When non admin user send GET request to search country by "name" "Nigeria" # cukes/feature/step_definitions/country_steps.rb:39
+    Then the response should be 200                                            # cukes/feature/step_definitions/common_steps.rb:6
+    And the response contain hash of countries having "Nigeria" in their name  # cukes/feature/step_definitions/country_steps.rb:16
+
+  @show @non-admin @run
+  Scenario: As non admin user able to view details of a country         # cukes\feature\country.feature:35
+    When non admin user send GET request to view country having id "33" # cukes/feature/step_definitions/country_steps.rb:46
+    Then the response should be 200                                     # cukes/feature/step_definitions/common_steps.rb:6
+    And the response contain hash of country id "33"                    # cukes/feature/step_definitions/country_steps.rb:29
+
+Feature: As an admin able to create LineItem for a given order
+
+  Scenario: Able to create line item for a new order                                  # cukes\feature\line_item.feature:3
+    When I send create request for new order                                          # cukes/feature/step_definitions/orders_steps.rb:45
+    Then the response should be 201                                                   # cukes/feature/step_definitions/common_steps.rb:6
+    When I send POST request to create a line item using variant id "119" and qty "1" # cukes/feature/step_definitions/lineitem_steps.rb:1
+    Then the response should be 201                                                   # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be an array of line item attributes                  # cukes/feature/step_definitions/lineitem_steps.rb:5
+    And the variant id in line item should be "119" and qty should be "1"             # cukes/feature/step_definitions/lineitem_steps.rb:11
+
+  Scenario: As an admin able to update quantity of line item in order                 # cukes\feature\line_item.feature:11
+    When I send create request for new order                                          # cukes/feature/step_definitions/orders_steps.rb:45
+    Then the response should be 201                                                   # cukes/feature/step_definitions/common_steps.rb:6
+    When I send POST request to create a line item using variant id "119" and qty "1" # cukes/feature/step_definitions/lineitem_steps.rb:1
+    Then the response should be 201                                                   # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be an array of line item attributes                  # cukes/feature/step_definitions/lineitem_steps.rb:5
+    And the variant id in line item should be "119" and qty should be "1"             # cukes/feature/step_definitions/lineitem_steps.rb:11
+    When I send POST request to update the line item quantity to "3"                  # cukes/feature/step_definitions/lineitem_steps.rb:17
+    Then the response should be 200                                                   # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be an array of line item attributes                  # cukes/feature/step_definitions/lineitem_steps.rb:5
+    And the quantity in line item should be should be "3"                             # cukes/feature/step_definitions/lineitem_steps.rb:21
+
+  @run
+  Scenario: As an admin able to delete line item in order                             # cukes\feature\line_item.feature:24
+    When I send create request for new order                                          # cukes/feature/step_definitions/orders_steps.rb:45
+    Then the response should be 201                                                   # cukes/feature/step_definitions/common_steps.rb:6
+    When I send POST request to create a line item using variant id "119" and qty "1" # cukes/feature/step_definitions/lineitem_steps.rb:1
+    Then the response should be 201                                                   # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be an array of line item attributes                  # cukes/feature/step_definitions/lineitem_steps.rb:5
+    And the variant id in line item should be "119" and qty should be "1"             # cukes/feature/step_definitions/lineitem_steps.rb:11
+    When I send DELETE request to delete the line item                                # cukes/feature/step_definitions/lineitem_steps.rb:26
+    Then the response should be 204                                                   # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be empty                                             # cukes/feature/step_definitions/common_steps.rb:10
+
+Feature: As an admin able to list of orders
+
+  Scenario: Able to list orders                          # cukes\feature\orders.feature:3
+    When I send GET request for orders list              # cukes/feature/step_definitions/orders_steps.rb:2
+    Then the response should be 200                      # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be an array with orders # cukes/feature/step_definitions/orders_steps.rb:7
+
+  Scenario: As an admin able to search order                                       # cukes\feature\orders.feature:10
+    When I send Get request to search order by "number" "R12"                      # cukes/feature/step_definitions/orders_steps.rb:15
+    Then the response should be 200                                                # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should contain orders list where "number" contains "R12" # cukes/feature/step_definitions/orders_steps.rb:20
+
+  Scenario: As an admin able to search order                                             # cukes\feature\orders.feature:16
+    When I send Get request to search order by "email" "mailinator"                      # cukes/feature/step_definitions/orders_steps.rb:15
+    Then the response should be 200                                                      # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should contain orders list where "email" contains "mailinator" # cukes/feature/step_definitions/orders_steps.rb:20
+
+  Scenario: As an admin able to show details of an order                    # cukes\feature\orders.feature:23
+    When I send SHOW request to view order details of an order "R665706376" # cukes/feature/step_definitions/orders_steps.rb:29
+    Then the response should be 200                                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be an array of order attributes            # cukes/feature/step_definitions/orders_steps.rb:40
+    And the order number should be "R665706376"                             # cukes/feature/step_definitions/orders_steps.rb:35
+
+  @create @run
+  Scenario: As an admin able to create new order                 # cukes\feature\orders.feature:31
+    When I send create request for new order                     # cukes/feature/step_definitions/orders_steps.rb:45
+    Then the response should be 201                              # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be an array of order attributes # cukes/feature/step_definitions/orders_steps.rb:40
+
+Feature: As an admin able to list product properties
+
+  @index @run
+  Scenario: Able to retrieve a blank list of product properties for a new product          # cukes\feature\product_properties.feature:3
+    When I send POST request to create new product with:                                   # cukes/feature/step_definitions/products_steps.rb:160
+      | name       | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | Headphones | 100   |             |              |                  |              |           |
+    When I send GET request for product properties of above created product with permalink # cukes/feature/step_definitions/product_property_steps.rb:1
+    Then the response should be 200                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should contain an array with hash of empty product properties    # cukes/feature/step_definitions/product_property_steps.rb:10
+
+  @create @index @run
+  Scenario: Able to retrieve a list of product properties for a new product                # cukes\feature\product_properties.feature:13
+    When I send POST request to create new product with:                                   # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | Slim Fit Jeans | 100   |             |              |                  |              |           |
+    When I send GET request for product properties of above created product with permalink # cukes/feature/step_definitions/product_property_steps.rb:1
+    Then the response should be 200                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send CREATE request for product property "Size" having value "10" of product    # cukes/feature/step_definitions/product_property_steps.rb:17
+    Then the response should be 201                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should contain a hash of product property                        # cukes/feature/step_definitions/product_property_steps.rb:21
+
+  @search @run
+  Scenario: To search for a particular product property                                                                           # cukes\feature\product_properties.feature:27
+    When I send POST request to create new product with:                                                                          # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | Slim Fit Jeans | 100   |             |              |                  |              |           |
+    When I send GET request for product properties of above created product with permalink                                        # cukes/feature/step_definitions/product_property_steps.rb:1
+    Then the response should be 200                                                                                               # cukes/feature/step_definitions/common_steps.rb:6
+    When I send CREATE request for product property "Size" having value "10" of product                                           # cukes/feature/step_definitions/product_property_steps.rb:17
+    Then the response should be 201                                                                                               # cukes/feature/step_definitions/common_steps.rb:6
+    When I send CREATE request for product property "Shirt" having value "28" of product                                          # cukes/feature/step_definitions/product_property_steps.rb:17
+    Then the response should be 201                                                                                               # cukes/feature/step_definitions/common_steps.rb:6
+    When I search for product property "size" of product                                                                          # cukes/feature/step_definitions/product_property_steps.rb:28
+    Then the response should be 200                                                                                               # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response for property search should contain an array of product property hash where property name include "size" # cukes/feature/step_definitions/product_property_steps.rb:32
+
+  @show @create @run
+  Scenario: To get information about all product property                                  # cukes\feature\product_properties.feature:43
+    When I send POST request to create new product with:                                   # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | Slim Fit Jeans | 100   |             |              |                  |              |           |
+    When I send GET request for product properties of above created product with permalink # cukes/feature/step_definitions/product_property_steps.rb:1
+    Then the response should be 200                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send CREATE request for product property "Size" having value "10" of product    # cukes/feature/step_definitions/product_property_steps.rb:17
+    Then the response should be 201                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send CREATE request for product property "Shirt" having value "28" of product   # cukes/feature/step_definitions/product_property_steps.rb:17
+    Then the response should be 201                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send SHOW request for product properties of product                             # cukes/feature/step_definitions/product_property_steps.rb:40
+    Then the response should be 200                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should include "size" in hashes of product property              # cukes/feature/step_definitions/product_property_steps.rb:44
+    And the JSON response should include "Shirt" in hashes of product property             # cukes/feature/step_definitions/product_property_steps.rb:44
+
+  @show @update
+  Scenario: To update an existing product property                                         # cukes\feature\product_properties.feature:61
+    When I send POST request to create new product with:                                   # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | Slim Fit Jeans | 100   |             |              |                  |              |           |
+    When I send GET request for product properties of above created product with permalink # cukes/feature/step_definitions/product_property_steps.rb:1
+    Then the response should be 200                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send CREATE request for product property "Size" having value "10" of product    # cukes/feature/step_definitions/product_property_steps.rb:17
+    Then the response should be 201                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send UPDATE request for product property "Size" to "20"                         # cukes/feature/step_definitions/product_property_steps.rb:66
+    Then the response should be 200                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    And the product property "Size" have updated value "20"                                # cukes/feature/step_definitions/product_property_steps.rb:70
+
+  @delete
+  Scenario: To delete a product property                                                   # cukes\feature\product_properties.feature:79
+    When I send POST request to create new product with:                                   # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | Slim Fit Jeans | 100   |             |              |                  |              |           |
+    When I send GET request for product properties of above created product with permalink # cukes/feature/step_definitions/product_property_steps.rb:1
+    Then the response should be 200                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send CREATE request for product property "Size" having value "10" of product    # cukes/feature/step_definitions/product_property_steps.rb:17
+    Then the response should be 201                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send SHOW request for product property "Size" of product                        # cukes/feature/step_definitions/product_property_steps.rb:81
+    Then the response should be 200                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should include hash of property "size"                           # cukes/feature/step_definitions/product_property_steps.rb:85
+    When I send DELETE request for product property "Size" of product                      # cukes/feature/step_definitions/product_property_steps.rb:77
+    Then the response should be 204                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    When I send SHOW request for product property "Size" of product                        # cukes/feature/step_definitions/product_property_steps.rb:81
+    Then the response should be 200                                                        # cukes/feature/step_definitions/common_steps.rb:6
+    And the hash should be blank                                                           # cukes/feature/step_definitions/product_property_steps.rb:90
+
+Feature: As an admin able to list product variants
+
+  @index
+  Scenario: Able to list product variants                                                      # cukes\feature\product_variants.feature:4
+    When I send POST request to create new product with:                                       # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | New Headphones | 10    |             |              |                  |              |           |
+    Then the response should be 201                                                            # cukes/feature/step_definitions/common_steps.rb:6
+    Then I send the CREATE request to create variant of a product with option values           # cukes/feature/step_definitions/product_variants_steps.rb:31
+      | option1 | option2 |
+      | 55      | 52      |
+    Then the response should be 201                                                            # cukes/feature/step_definitions/common_steps.rb:6
+    And I send the request to list variants of product                                         # cukes/feature/step_definitions/product_variants_steps.rb:77
+    Then the response should be 200                                                            # cukes/feature/step_definitions/common_steps.rb:6
+    And the json response should contain the newly created variant in hash of varaint in array # cukes/feature/step_definitions/product_variants_steps.rb:37
+      [620, 621]
+      621
+
+  #@search
+  #Scenario: To search for a particular variant
+  @show
+  Scenario: To view the details for a single variant using id                        # cukes\feature\product_variants.feature:25
+    When I send POST request to create new product with:                             # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | New Headphones | 10    |             |              |                  |              |           |
+    Then the response should be 201                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    Then I send the CREATE request to create variant of a product with option values # cukes/feature/step_definitions/product_variants_steps.rb:31
+      | option1 | option2 |
+      | 55      | 53      |
+    Then the response should be 201                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    And I send SHOW request to list specific variant of product                      # cukes/feature/step_definitions/product_variants_steps.rb:90
+    Then the response should be 200                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    And the json response should contain hash of varaint                             # cukes/feature/step_definitions/product_variants_steps.rb:50
+      | option1 | option2 |
+      | 55      | 53      |
+
+  @new @run
+  Scenario: To view the attributes (required and non-required) for a variant    # cukes\feature\product_variants.feature:45
+    When I send POST request to create new product with:                        # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | New Headphones | 100   |             |              |                  |              |           |
+    Then the response should be 201                                             # cukes/feature/step_definitions/common_steps.rb:6
+    Then I send the GET request for the attributes of variant of a product      # cukes/feature/step_definitions/product_variants_steps.rb:14
+    Then the response should be 200                                             # cukes/feature/step_definitions/common_steps.rb:6
+    And the json response should contain attributes and required_attributes key # cukes/feature/step_definitions/product_variants_steps.rb:19
+
+  @create
+  Scenario: To create a new variant for a product                                    # cukes\feature\product_variants.feature:56
+    When I send POST request to create new product with:                             # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | New Headphones | 100   |             |              |                  |              |           |
+    Then the response should be 201                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    Then I send the CREATE request to create variant of a product with option values # cukes/feature/step_definitions/product_variants_steps.rb:31
+      | option1 | option2 |
+      | 55      | 52      |
+    Then the response should be 201                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    And the json response should contain hash of varaint                             # cukes/feature/step_definitions/product_variants_steps.rb:50
+      | option1 | option2 |
+      | 55      | 52      |
+
+  @update
+  Scenario: To update a variant's details (update sku)                               # cukes\feature\product_variants.feature:72
+    When I send POST request to create new product with:                             # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | New Headphones | 10    |             |              |                  |              |           |
+    Then the response should be 201                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    Then I send the CREATE request to create variant of a product with option values # cukes/feature/step_definitions/product_variants_steps.rb:31
+      | option1 | option2 |
+      | 55      | 52      |
+    Then the response should be 201                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    And the json response should contain hash of varaint                             # cukes/feature/step_definitions/product_variants_steps.rb:50
+      | option1 | option2 |
+      | 55      | 52      |
+    When I send UPDATE request to variant of a product with option values            # cukes/feature/step_definitions/product_variants_steps.rb:62
+      | price | width | height | depth |
+      | 90    | 90    | 90     | 90    |
+    Then the response should be 200                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    And the json response should contain hash of varaint attributes                  # cukes/feature/step_definitions/product_variants_steps.rb:66
+      | price | width | height | depth |
+      | 90    | 90    | 90     | 90    |
+
+  @delete
+  Scenario: To delete a variant                                                      # cukes\feature\product_variants.feature:95
+    When I send POST request to create new product with:                             # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | New Headphones | 10    |             |              |                  |              |           |
+    Then the response should be 201                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    Then I send the CREATE request to create variant of a product with option values # cukes/feature/step_definitions/product_variants_steps.rb:31
+      | option1 | option2 |
+      | 55      | 52      |
+    Then the response should be 201                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    And the json response should contain hash of varaint                             # cukes/feature/step_definitions/product_variants_steps.rb:50
+      | option1 | option2 |
+      | 55      | 52      |
+    When I send UPDATE request to variant of a product with option values            # cukes/feature/step_definitions/product_variants_steps.rb:62
+      | price | width | height | depth |
+      | 90    | 90    | 90     | 90    |
+    Then the response should be 200                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    And the json response should contain hash of varaint attributes                  # cukes/feature/step_definitions/product_variants_steps.rb:66
+      | price | width | height | depth |
+      | 90    | 90    | 90     | 90    |
+    When I send DELETE request to delete variant of a product                        # cukes/feature/step_definitions/product_variants_steps.rb:73
+    Then the response should be 204                                                  # cukes/feature/step_definitions/common_steps.rb:6
+    And I send the request to list variants of product                               # cukes/feature/step_definitions/product_variants_steps.rb:77
+    Then the deleted variant should not be listed                                    # cukes/feature/step_definitions/product_variants_steps.rb:81
+
+Feature: As an admin able to list products
+
+  @index
+  Scenario: Able to list products                                       # cukes\feature\products.feature:4
+    When I send GET request for "/products"                             # cukes/feature/step_definitions/products_steps.rb:1
+    Then the response for product listing should be 200                 # cukes/feature/step_definitions/products_steps.rb:6
+      #<HTTParty::Response::Headers:0x2f2fed8>
+      #<HTTParty::Request:0x2f2c8f0>
+      #<Net::HTTPOK:0x2f2a238>
+      COUNT: 2
+      TOTAL COUNT:297
+      CURRENT PAGE:1
+      PAGES:149
+      NO. OF PRODUCTS:2
+      Products Listed:
+      PRODUCTS name: Men Blue Camaro FIt
+      PRODUCTS name: men Blue Jetta Corvette 
+    And the JSON response should be an hash having an array of products # cukes/feature/step_definitions/products_steps.rb:134
+    And products array should have hashes                               # cukes/feature/step_definitions/products_steps.rb:140
+    And a single record of product have details                         # cukes/feature/step_definitions/products_steps.rb:146
+    And should have variants details                                    # cukes/feature/step_definitions/products_steps.rb:152
+
+  @new
+  Scenario: Able to view the attibutes of product and required field for it # cukes\feature\products.feature:13
+    When I send GET request "/products/new" to view product attributes      # cukes/feature/step_definitions/products_steps.rb:217
+    Then the response for product attributes listing should be 200          # cukes/feature/step_definitions/products_steps.rb:222
+    And the product attributes should be display                            # cukes/feature/step_definitions/products_steps.rb:226
+    And the required attribute of product also displayed                    # cukes/feature/step_definitions/products_steps.rb:234
+
+  @new1
+  Scenario: Able to create product on specifying name and price # cukes\feature\products.feature:20
+    When I send POST request to create new product with:        # cukes/feature/step_definitions/products_steps.rb:160
+      | name           | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | New Headphones | 100   |             |              |                  |              |           |
+    Then the response should be 201                             # cukes/feature/step_definitions/common_steps.rb:6
+    And product name should be "New Headphones" and price 100   # cukes/feature/step_definitions/products_steps.rb:180
+
+  @new1
+  Scenario: Not able to create product if either name or price is not present # cukes\feature\products.feature:29
+    When I send POST request to create new product with:                      # cukes/feature/step_definitions/products_steps.rb:160
+      | name       | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | Headphones | blank |             |              |                  |              |           |
+    Then the response should be 422                                           # cukes/feature/step_definitions/common_steps.rb:6
+
+  @new
+  Scenario: Not able to create product if either name or price is not present # cukes\feature\products.feature:36
+    When I send POST request to create new product with:                      # cukes/feature/step_definitions/products_steps.rb:160
+      | name | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      |      | 100   |             |              |                  |              |           |
+    Then the response should be 422                                           # cukes/feature/step_definitions/common_steps.rb:6
+
+  @new
+  Scenario: Able to create product if price is not numeric, and it should set to 0 # cukes\feature\products.feature:43
+    When I send POST request to create new product with:                           # cukes/feature/step_definitions/products_steps.rb:160
+      | name       | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | Loremipsum | asdf  |             |              |                  |              |           |
+    Then the response should be 201                                                # cukes/feature/step_definitions/common_steps.rb:6
+    And product name should be "Loremipsum" and price 0                            # cukes/feature/step_definitions/products_steps.rb:180
+
+  @new
+  Scenario: Able to create a product by specifying all the attributes # cukes\feature\products.feature:51
+    When I send POST request to create new product with:              # cukes/feature/step_definitions/products_steps.rb:160
+      | name          | price | description                 | available_on   | meta_description | meta_keyword | taxon_ids |
+      | Lorem%20Ipsum | 100   | lorem%20ipsum%20dolor%20sit | 2013%2F07%2F15 |                  |              | 39        |
+    Then the response should be 201                                   # cukes/feature/step_definitions/common_steps.rb:6
+    And product name should be "Lorem Ipsum" and price 100            # cukes/feature/step_definitions/products_steps.rb:180
+      
+      expected: "Lorem Ipsum"
+           got: "Lorem%20Ipsum"
+      
+      (compared using eql?)
+       (RSpec::Expectations::ExpectationNotMetError)
+      ./cukes/feature/step_definitions/products_steps.rb:182:in `/^product name should be "(.*?)" and price (\d+)$/'
+      cukes\feature\products.feature:56:in `And product name should be "Lorem Ipsum" and price 100'
+
+  @search
+  Scenario: As an admin, I am able to search product                    # cukes\feature\products.feature:60
+    When I send GET request for search of product having keyword "new"  # cukes/feature/step_definitions/products_steps.rb:204
+    Then the response for product listing should be 200                 # cukes/feature/step_definitions/products_steps.rb:6
+      #<HTTParty::Response::Headers:0x2f1c258>
+      #<HTTParty::Request:0x2f11770>
+      #<Net::HTTPOK:0x2f17290>
+      COUNT: 25
+      TOTAL COUNT:129
+      CURRENT PAGE:1
+      PAGES:6
+      NO. OF PRODUCTS:25
+      Products Listed:
+      PRODUCTS name: NewHeadPhone
+      PRODUCTS name: NewHeadPhone
+      PRODUCTS name: NewHeadPhone
+      PRODUCTS name: NewHeadPhone
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+      PRODUCTS name: New Headphones
+    And the JSON response should be an hash having an array of products # cukes/feature/step_definitions/products_steps.rb:134
+    And products name should contain keyword "New" in their name        # cukes/feature/step_definitions/products_steps.rb:209
+
+  @show
+  Scenario: As an admin I am able to view the details of specific product using permalink          # cukes\feature\products.feature:67
+    When I send the GET request for the prodcut having permalink "laptop-bag-for-college"          # cukes/feature/step_definitions/products_steps.rb:240
+    Then the response for product details should be 200                                            # cukes/feature/step_definitions/products_steps.rb:245
+    And the product detail should contain details of product, its variants, product properties and # cukes\feature\products.feature:70
+
+  @show
+  Scenario: As an admin I am able to view the details of specific product using id                # cukes\feature\products.feature:73
+    When I send the GET request for the prodcut having id 64                                      # cukes/feature/step_definitions/products_steps.rb:254
+    Then the response for product details should be 200                                           # cukes/feature/step_definitions/products_steps.rb:245
+    And the product detail should contain details of product, its variants and product properties # cukes/feature/step_definitions/products_steps.rb:249
+
+  @show
+  Scenario: As an admin I should get no results if permalink does not exist              # cukes\feature\products.feature:78
+    When I send the GET request for the prodcut having permalink "something-not-present" # cukes/feature/step_definitions/products_steps.rb:240
+    Then the response for product details should be 404                                  # cukes/feature/step_definitions/products_steps.rb:245
+
+  @show
+  Scenario: As an admin I should get no results if id does not exist # cukes\feature\products.feature:83
+    When I send the GET request for the prodcut having id 100000     # cukes/feature/step_definitions/products_steps.rb:254
+    Then the response for product details should be 404              # cukes/feature/step_definitions/products_steps.rb:245
+
+  @update
+  Scenario: As an admin I should be able to update product # cukes\feature\products.feature:88
+    When I send PUT request to update product with:        # cukes/feature/step_definitions/products_steps.rb:169
+      | permalink              | price |
+      | laptop-bag-for-college | 100   |
+    Then the response should be 200                        # cukes/feature/step_definitions/common_steps.rb:6
+
+  @update
+  Scenario: As an admin I should not be able to update product to blank price # cukes\feature\products.feature:95
+    When I send PUT request to update product with:                           # cukes/feature/step_definitions/products_steps.rb:169
+      | permalink              | name |
+      | laptop-bag-for-college |      |
+    Then the response should be 422                                           # cukes/feature/step_definitions/common_steps.rb:6
+
+  @update
+  Scenario: As an admin I should not be able to update product to blank price # cukes\feature\products.feature:102
+    When I send PUT request to update product with:                           # cukes/feature/step_definitions/products_steps.rb:169
+      | permalink | name |
+      | exist-not | qaz  |
+    Then the response should be 404                                           # cukes/feature/step_definitions/common_steps.rb:6
+
+  @delete
+  Scenario: As an admin I should be able to delete product by permalink         # cukes\feature\products.feature:109
+    When I send POST request to create new product with:                        # cukes/feature/step_definitions/products_steps.rb:160
+      | name       | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | Headphones | 100   |             |              |                  |              |           |
+    Then the response should be 201                                             # cukes/feature/step_definitions/common_steps.rb:6
+    And product name should be "Headphones" and price 100                       # cukes/feature/step_definitions/products_steps.rb:180
+    When I send DELETE request to delete the newly created product by permalink # cukes/feature/step_definitions/products_steps.rb:191
+    Then the response should be 204                                             # cukes/feature/step_definitions/common_steps.rb:6
+
+  @delete
+  Scenario: As an admin I should be able to delete product by id         # cukes\feature\products.feature:119
+    When I send POST request to create new product with:                 # cukes/feature/step_definitions/products_steps.rb:160
+      | name       | price | description | available_on | meta_description | meta_keyword | taxon_ids |
+      | Headphones | 100   |             |              |                  |              |           |
+    Then the response should be 201                                      # cukes/feature/step_definitions/common_steps.rb:6
+    And product name should be "Headphones" and price 100                # cukes/feature/step_definitions/products_steps.rb:180
+    When I send DELETE request to delete the newly created product by id # cukes/feature/step_definitions/products_steps.rb:197
+    Then the response should be 204                                      # cukes/feature/step_definitions/common_steps.rb:6
+
+  @delete
+  Scenario: As an admin I should not be able to delete product if permalink not exist # cukes\feature\products.feature:129
+    When I send DELETE request to delete product with:                                # cukes/feature/step_definitions/products_steps.rb:174
+      | permalink |
+      | exist-not |
+    Then the response should be 404                                                   # cukes/feature/step_definitions/common_steps.rb:6
+
+  @delete
+  Scenario: As an admin I should not be able to delete product if id not exist # cukes\feature\products.feature:136
+    When I send DELETE request to delete product with:                         # cukes/feature/step_definitions/products_steps.rb:174
+      | id      | permalink |
+      | 9999999 | blank     |
+    Then the response should be 404                                            # cukes/feature/step_definitions/common_steps.rb:6
+
+#Issue in create and delete
+Feature: To view and CRUD stock items
+
+  @index
+  Scenario: As an admin able to view stock items listing                                 # cukes\feature\stock_items.feature:4
+    When I send GET request to view stock item listing for stock location "name" "india" # cukes/feature/step_definitions/stock_steps.rb:52
+    Then the response should be 200                                                      # cukes/feature/step_definitions/common_steps.rb:6
+    And Json response should be an hash of stock items                                   # cukes/feature/step_definitions/stock_steps.rb:61
+
+  @search
+  Scenario: As an admin able to search stock item in stock location                                     # cukes\feature\stock_items.feature:10
+    When I send GET request to search stock item by "variant_id" "10" for stock location "name" "india" # cukes/feature/step_definitions/stock_steps.rb:71
+    Then the response should be 200                                                                     # cukes/feature/step_definitions/common_steps.rb:6
+    And Json response should be an hash of stock items having "variant_id" "10"                         # cukes/feature/step_definitions/stock_steps.rb:79
+
+  @show @nrun
+  Scenario: As an admin able to view speicifc stock item                                       # cukes\feature\stock_items.feature:16
+    When I send GET request to view stock item by id "19967" for stock location "name" "india" # cukes/feature/step_definitions/stock_steps.rb:84
+    Then the response should be 200                                                            # cukes/feature/step_definitions/common_steps.rb:6
+      
+      expected #<Fixnum:401> => 200
+           got #<Fixnum:809> => 404
+      
+      Compared using equal?, which compares object identity,
+      but expected and actual are not the same object. Use
+      `expect(actual).to eq(expected)` if you don't care about
+      object identity in this example.
+      
+       (RSpec::Expectations::ExpectationNotMetError)
+      ./cukes/feature/step_definitions/common_steps.rb:7:in `/^the response should be (\d+)$/'
+      cukes\feature\stock_items.feature:18:in `Then the response should be 200'
+    And Json response should contain stock items having "id" "19967"                           # cukes/feature/step_definitions/stock_steps.rb:92
+
+  @create @show @delete @run
+  Scenario: As an admin able to create stock item                                                              # cukes\feature\stock_items.feature:22
+/stock_locations/2/stock_items?token=f3c9c1708ee7e426a90225c2d5cec57a22a3722e1bf73ab9
+    When I send POST request to create stock item with:                                                        # cukes/feature/step_definitions/stock_steps.rb:97
+      {"error"=>"Invalid resource. Please fix errors and try again.", "errors"=>{"variant_id"=>["has already been taken"]}}
+      | sname | variant_id | count_on_hand |
+      | india | 10         | 2             |
+    Then the response should be 201                                                                            # cukes/feature/step_definitions/common_steps.rb:6
+      
+      expected #<Fixnum:403> => 201
+           got #<Fixnum:845> => 422
+      
+      Compared using equal?, which compares object identity,
+      but expected and actual are not the same object. Use
+      `expect(actual).to eq(expected)` if you don't care about
+      object identity in this example.
+      
+       (RSpec::Expectations::ExpectationNotMetError)
+      ./cukes/feature/step_definitions/common_steps.rb:7:in `/^the response should be (\d+)$/'
+      cukes\feature\stock_items.feature:26:in `Then the response should be 201'
+    And Json response should contain stock items having "variant_id" "10"                                      # cukes/feature/step_definitions/stock_steps.rb:92
+    When I send GET request to view stock item by id where "variant_id" "10" for stock location "name" "india" # cukes/feature/step_definitions/stock_steps.rb:114
+    Then the response should be 200                                                                            # cukes/feature/step_definitions/common_steps.rb:6
+    And Json response should contain stock items having "variant_id" "10"                                      # cukes/feature/step_definitions/stock_steps.rb:92
+    When I send DELETE request to delete stock item by id "19968" for stock location "name" "india"            # cukes/feature/step_definitions/stock_steps.rb:106
+    Then the response should be 404                                                                            # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be empty                                                                      # cukes/feature/step_definitions/common_steps.rb:10
+    When I send GET request to view stock item by id "19968" for stock location "name" "india"                 # cukes/feature/step_definitions/stock_steps.rb:84
+    Then the response should be 404                                                                            # cukes/feature/step_definitions/common_steps.rb:6
+
+  @delete @nrun
+  Scenario: As an admin able to delete speicifc stock item                                          # cukes\feature\stock_items.feature:42
+/stock_locations/2/stock_item/19968?token=f3c9c1708ee7e426a90225c2d5cec57a22a3722e1bf73ab9
+    When I send DELETE request to delete stock item by id "19968" for stock location "name" "india" # cukes/feature/step_definitions/stock_steps.rb:106
+    Then the response should be 404                                                                 # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be empty                                                           # cukes/feature/step_definitions/common_steps.rb:10
+      expected: nil
+           got: "{\"error\":\"The resource you were looking for could not be found.\"}" (RSpec::Expectations::ExpectationNotMetError)
+      ./cukes/feature/step_definitions/common_steps.rb:11:in `/^the JSON response should be empty$/'
+      cukes\feature\stock_items.feature:45:in `And the JSON response should be empty'
+    When I send GET request to view stock item by id "19968" for stock location "name" "india"      # cukes/feature/step_definitions/stock_steps.rb:84
+    Then the response should be 404                                                                 # cukes/feature/step_definitions/common_steps.rb:6
+
+Feature: As an admin able to list STOCK LOCATIONS
+
+  @index
+  Scenario: As an admin I am able to view list of Stock locations # cukes\feature\stock_location.feature:3
+    When I send GET request to view list of all stock location    # cukes/feature/step_definitions/stock_steps.rb:1
+    Then the response should be 200                               # cukes/feature/step_definitions/common_steps.rb:6
+    And Json response should be an hash of stock locations        # cukes/feature/step_definitions/stock_steps.rb:19
+
+  @search
+  Scenario: As an admin I am able to search Stock locations              # cukes\feature\stock_location.feature:9
+    When I send GET request to search stock location by "name" "default" # cukes/feature/step_definitions/stock_steps.rb:6
+    Then the response should be 200                                      # cukes/feature/step_definitions/common_steps.rb:6
+    And the stock location "name" should contain "default"               # cukes/feature/step_definitions/stock_steps.rb:12
+      {"count"=>1, "current_page"=>1, "pages"=>1, "stock_locations"=>[{"id"=>1, "name"=>"default", "address1"=>nil, "address2"=>nil, "city"=>nil, "state_id"=>nil, "state_name"=>nil, "country_id"=>49, "zipcode"=>nil, "phone"=>nil, "active"=>true, "country"=>{"id"=>49, "iso_name"=>"UNITED STATES", "iso"=>"US", "iso3"=>"USA", "name"=>"United States", "numcode"=>840}, ""=>nil}]}
+
+  @create @run
+  Scenario: As an admin I am able to create Stock locations # cukes\feature\stock_location.feature:15
+    When I send POST request to create stock location with: # cukes/feature/step_definitions/stock_steps.rb:25
+      | name          | action |
+      | Test Location | true   |
+    Then the response should be 201                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the stock location "name" should be "Test Location" # cukes/feature/step_definitions/stock_steps.rb:32
+/stock_locations/55?token=f3c9c1708ee7e426a90225c2d5cec57a22a3722e1bf73ab9
+    When I send GET request to view stock location          # cukes/feature/step_definitions/stock_steps.rb:38
+    Then the response should be 200                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the stock location "name" should be "Test Location" # cukes/feature/step_definitions/stock_steps.rb:32
+    When I send PUT request to update stock location with:  # cukes/feature/step_definitions/stock_steps.rb:42
+      | name            | action |
+      | Test Location 1 | false  |
+    Then the response should be 200                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the stock location "active" should be "false"       # cukes/feature/step_definitions/stock_steps.rb:32
+    When I send DELETE request to delete the stock location # cukes/feature/step_definitions/stock_steps.rb:47
+    Then the response should be 204                         # cukes/feature/step_definitions/common_steps.rb:6
+/stock_locations/55?token=f3c9c1708ee7e426a90225c2d5cec57a22a3722e1bf73ab9
+    When I send GET request to view stock location          # cukes/feature/step_definitions/stock_steps.rb:38
+    Then the response should be 404                         # cukes/feature/step_definitions/common_steps.rb:6
+
+Feature: As an admin able to list TAXONOMIES
+
+  Scenario: As an admin I am able to list all the taxonomies # cukes\feature\taxonomy.feature:3
+    When I send GET request to view list of all taxonomy     # cukes/feature/step_definitions/taxonomy_steps.rb:1
+    Then the response should be 200                          # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain hash of taxonomy         # cukes/feature/step_definitions/taxonomy_steps.rb:6
+
+  Scenario: As an admin able to search Taxonomy                                   # cukes\feature\taxonomy.feature:8
+    When I send SEARCH request for a taxonomy by "name" "Brand"                   # cukes/feature/step_definitions/taxonomy_steps.rb:18
+    Then the response should be 200                                               # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain hash of attributes of taxonomy "name" "Brand" # cukes/feature/step_definitions/taxonomy_steps.rb:23
+
+  Scenario: As an admin able to view Taxonomy details using id                # cukes\feature\taxonomy.feature:13
+    When I send GET request to view list of taxonomy having id "1"            # cukes/feature/step_definitions/taxonomy_steps.rb:31
+    Then the response should be 200                                           # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain hash of details of taxonomy having id "1" # cukes/feature/step_definitions/taxonomy_steps.rb:36
+
+  Scenario: As an admin able to update new Taxonomy                                         # cukes\feature\taxonomy.feature:18
+    When I send POST request to update taxonomy having id "1" "name" to "Categoryy"         # cukes/feature/step_definitions/taxonomy_steps.rb:42
+    Then the response should be 200                                                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain taxonomy having id "1" with updated "name" "Categoryy"  # cukes/feature/step_definitions/taxonomy_steps.rb:47
+    When I send POST request to update taxonomy having id "1" "name" to "Categories"        # cukes/feature/step_definitions/taxonomy_steps.rb:42
+    And the response should contain taxonomy having id "1" with updated "name" "Categories" # cukes/feature/step_definitions/taxonomy_steps.rb:47
+
+  Scenario: As an admin able to create and delete Taxonomy                  # cukes\feature\taxonomy.feature:26
+    When I send POST request to create a new taxonomy with name "Favourite" # cukes/feature/step_definitions/taxonomy_steps.rb:53
+    Then the response should be 201                                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain taxonomy having "name" "Favourite"      # cukes/feature/step_definitions/taxonomy_steps.rb:60
+    When I send DELETE request for taxonomy "name" "Favourite"              # cukes/feature/step_definitions/taxonomy_steps.rb:65
+    Then the response should be 204                                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be empty                                   # cukes/feature/step_definitions/common_steps.rb:10
+
+  @Taxon_CRUD
+  Scenario: As an admin able to create new Taxon                            # cukes\feature\taxonomy.feature:36
+    When I send POST request to create a new taxonomy with name "Favourite" # cukes/feature/step_definitions/taxonomy_steps.rb:53
+    Then the response should be 201                                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain taxonomy having "name" "Favourite"      # cukes/feature/step_definitions/taxonomy_steps.rb:60
+    When I send POST request to create a new taxon with name "Favourite 1"  # cukes/feature/step_definitions/taxonomy_steps.rb:77
+    Then the response should be 201                                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain taxon having "name" "Favourite 1"       # cukes/feature/step_definitions/taxonomy_steps.rb:83
+    When I send UPDATE request to update taxon "name" to "Fav 1"            # cukes/feature/step_definitions/taxonomy_steps.rb:88
+    Then the response should be 200                                         # cukes/feature/step_definitions/common_steps.rb:6
+    When I send POST request to create a new taxon with name "Favourite 2"  # cukes/feature/step_definitions/taxonomy_steps.rb:77
+    Then the response should be 201                                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the response should contain taxon having "name" "Favourite 2"       # cukes/feature/step_definitions/taxonomy_steps.rb:83
+    When I send UPDATE request to update taxon "name" to "Fav 2"            # cukes/feature/step_definitions/taxonomy_steps.rb:88
+    Then the response should be 200                                         # cukes/feature/step_definitions/common_steps.rb:6
+    When I send DELETE request for taxon "name" "Fav 1"                     # cukes/feature/step_definitions/taxonomy_steps.rb:93
+    Then the response should be 204                                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be empty                                   # cukes/feature/step_definitions/common_steps.rb:10
+    When I send DELETE request for taxon "name" "Fav 2"                     # cukes/feature/step_definitions/taxonomy_steps.rb:93
+    Then the response should be 204                                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be empty                                   # cukes/feature/step_definitions/common_steps.rb:10
+    When I send DELETE request for taxonomy "name" "Favourite"              # cukes/feature/step_definitions/taxonomy_steps.rb:65
+    Then the response should be 204                                         # cukes/feature/step_definitions/common_steps.rb:6
+    And the JSON response should be empty                                   # cukes/feature/step_definitions/common_steps.rb:10
+
+Feature: As an admin able to list ZONES
+
+  Scenario: To get a list of zones, make this request:         # cukes\feature\zone.feature:3
+    When I send GET request to view list of all zones "/zones" # cukes/feature/step_definitions/zone_steps.rb:1
+      undefined method `merge!' for "/zones":String (NoMethodError)
+      ./cukes/lib/pages/zoneapi.rb:5:in `zonelist'
+      ./cukes/feature/step_definitions/zone_steps.rb:3:in `/^I send GET request to view list of all zones "(.*?)"$/'
+      cukes\feature\zone.feature:4:in `When I send GET request to view list of all zones "/zones"'
+    Then the response should be 200                            # cukes/feature/step_definitions/common_steps.rb:6
+
+Failing Scenarios:
+cucumber cukes\feature\products.feature:51 # Scenario: Able to create a product by specifying all the attributes
+cucumber cukes\feature\stock_items.feature:16 # Scenario: As an admin able to view speicifc stock item
+cucumber cukes\feature\stock_items.feature:22 # Scenario: As an admin able to create stock item
+cucumber cukes\feature\stock_items.feature:42 # Scenario: As an admin able to delete speicifc stock item
+cucumber cukes\feature\zone.feature:3 # Scenario: To get a list of zones, make this request:
+
+65 scenarios (5 failed, 1 undefined, 59 passed)
+323 steps (5 failed, 13 skipped, 1 undefined, 304 passed)
+1m22.481s
+
+You can implement step definitions for undefined steps with these snippets:
+
+Then(/^the product detail should contain details of product, its variants, product properties and$/) do
+  pending # express the regexp above with the code you wish you had
+end
+

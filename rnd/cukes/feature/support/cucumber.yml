@@ -1,0 +1,8 @@
+# config/cucumber.yml
+##YAML Template
+
+html_report: --format progress --format html --out=features_report.html  
+set1: --tags @set1
+set2: --tags @set2
+set3: --tags @set3
+set4: --tags @set4
