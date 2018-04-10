@@ -1,0 +1,4 @@
+Run jmeter without GUI
+ Place a script file(.jmx) on jmeter/bin/example directory
+ go to jmeter/bin in the console
+ run this command jmeter -n -t [path of your script file]\C:\Jmeter\apache-jmeter-3.1\bin\examples\Test.jmx -l [path of result file]\C:\Jmeter\apache-jmeter-3.1\bin\examples\Book2.csv
