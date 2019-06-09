@@ -1,0 +1,52 @@
+
+---
+ar_internal_metadata:
+  columns:
+  - key
+  - value
+  - created_at
+  - updated_at
+  records: 
+  - - environment
+    - development
+    - '2019-05-23 02:13:17.556393'
+    - '2019-05-23 02:13:17.556393'
+
+---
+comments:
+  columns:
+  - id
+  - author_name
+  - body
+  - post_id
+  - created_at
+  - updated_at
+  records: 
+  - - 4
+    - akku 1
+    - yeah
+    - 2
+    - '2019-05-24 05:43:57.780578'
+    - '2019-05-24 05:43:57.780578'
+
+---
+posts:
+  columns:
+  - id
+  - title
+  - body
+  - created_at
+  - updated_at
+  records: 
+  - - 2
+    - 1st post
+    - Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+      Ipsum has been the industry's standard dummy text ever since the 1500s, when
+      an unknown printer took a galley of type and scrambled it to make a type specimen
+      book. It has survived not only five centuries, but also the leap into electronic
+      typesetting, remaining essentially unchanged. It was popularised in the 1960s
+      with the release of Letraset sheets containing Lorem Ipsum passages, and more
+      recently with desktop publishing software like Aldus PageMaker including versions
+      of Lorem Ipsum.
+    - '2019-05-23 03:12:43.283936'
+    - '2019-05-23 03:12:43.283936'

@@ -1,0 +1,31 @@
+<h1> Post </h1>
+<h3><%= flash.notice %></h3>
+<p>
+	<label>Title :</label>
+	<i><%= @post.title %></i>
+</p>
+ <p>
+	<label> Body :</label>
+	<i> <%= @post.body %> <i>
+</p>
+	
+<div class="post_comment">
+<p>
+	<% if @post.comments.present? %>
+	<h4>Comments : </h4>
+	<div >
+		<%= render partial: 'posts/comment', collection: @post.comments %>
+		<div>
+			<% else %>
+			<h4>You don't have any comment.</h4>
+			<% end %>
+		</p>
+</div>
+<br>
+<%= render partial: 'comments/form', comment: @comment %>
+
+
+ <%= link_to 'Delete', post_path(@post), method: :delete, remote: true, data: {confirm: "Really you wants to delete the article?"} %>&nbsp;
+ <%= link_to 'Destroy', delete_post_path(@post), method: :delete_post, data: {confirm: "Really you wants to destroy the article?"} %>&nbsp;
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>
