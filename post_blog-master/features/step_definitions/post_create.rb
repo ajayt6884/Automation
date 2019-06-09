@@ -4,7 +4,7 @@ Given("i am on trash page") do
 end
 
 Then("i click on the back button") do
-	@home = Home.new
+    @home = Home.new
   	@home.load
   	@home.back_button.click
 end

@@ -1,6 +1,5 @@
 require 'capybara/dsl'
 require 'selenium-webdriver'
-# require 'rspec/rails'
 require 'site_prism'
 require 'active_record'
 require 'rails'
@@ -16,14 +15,6 @@ Before do
   Capybara.register_driver :selenium do |app|
     Capybara::Selenium::Driver.new(app, :browser => :chrome)
 	end
-	# Capybara.current_session.current_window.maximize
+	Capybara.default_max_wait_time = 10
 end
 
-
-# Capybara.default_driver = :selenium
-# Capybara.current_session.current_window.maximize
-
-
-# After do |scenario|
-#   page.execute_script "window.close();"
-# end

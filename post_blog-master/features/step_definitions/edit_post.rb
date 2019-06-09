@@ -4,7 +4,7 @@ Given("i am on the trash page") do
 end
 
 Then("i click on back button") do
-	@home = Home.new
+    @home = Home.new
   	@home.load
   	@home.back_button.click
 end
@@ -28,7 +28,7 @@ Then("i update the body and title values") do
 end
 
 Then("i click on the update post button") do
-  @home = Home.new
+    @home = Home.new
   	@home.load
   	@home.back_button.click
   	@post_edit = Post_Edit_Html.new
