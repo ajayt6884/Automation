@@ -1,0 +1,7 @@
+Run rspec test cases
+1. cd into the project. 
+2. rake spec
+
+Run cucumber test cases
+1. cd into the project. 
+2. cucumber

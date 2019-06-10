@@ -1,0 +1,10 @@
+<div id = "comment_section" >
+  
+  <p class="comment">
+  	<%= comment.body %> &nbsp; &nbsp;
+    <%= link_to 'edit', edit_post_comment_path(comment.post.id, comment.id)%> &nbsp;
+    <%= link_to 'Destroy', delete_comment_path(comment.post.id, comment.id) %>
+    <%= link_to 'Delete', post_comment_path(comment.post.id, comment.id), method: :delete, remote: true %>
+
+ </p>
+</div>
